@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 20px;
+      background: #f4f4f5;
+      color: #18181b;
+    }
+
+    .container {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+    }
+
+    input, button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+
+    input {
+      border: 1px solid #ccc;
+    }
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #f4f4f5;
+      padding: 12px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Timestamp Converter</h2>
+    <p>Unix timestamp (milliseconds):</p>
+
+    <input id="timestamp" type="number"
+           placeholder="1720000000000">
+
+    <button onclick="convert()">Convert</button>
+
+    <h3>Python datetime equivalent:</h3>
+    <pre id="result">Result will appear here...</pre>
+
+    <button onclick="copyResult()">Copy result</button>
+  </div>
+
+  <script>
+    function convert() {
+      const value = document.getElementById("timestamp").value;
+      const result = document.getElementById("result");
+
+      if (value.trim() === "") {
+        result.textContent = "Enter a timestamp first.";
+        return;
+      }
+
+      const ms = Number(value);
+      const date = new Date(ms);
+
+      if (!Number.isFinite(ms) ||
+          !Number.isFinite(date.getTime())) {
+        result.textContent = "Invalid timestamp.";
+        return;
+      }
+
+      result.textContent =
+        "Local: " + date.toString() + "\n" +
+        "UTC:   " + date.toISOString();
+    }
+
+    async function copyResult() {
+      const text = document.getElementById("result").textContent;
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        alert("Copy failed. Please copy the result manually.");
+      }
+    }
+
+    document.getElementById("timestamp").addEventListener(
+      "keydown",
+      event => {
+        if (event.key === "Enter") convert();
+      }
+    );
+  </script>
+</body>
+</html>
